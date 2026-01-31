@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
         port: "",
       },
       {
-        hostname: "loyal-mouse-102.convex.cloud",
+        hostname: "dependable-squirrel-228.convex.cloud",
         protocol: "https",
         port: "",
       },

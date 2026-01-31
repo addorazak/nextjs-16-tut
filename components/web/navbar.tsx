@@ -3,14 +3,14 @@
 import Link from "next/link";
 import { Button, buttonVariants } from "../ui/button";
 import { ThemeToggle } from "./theme-toggle";
-import { useConvexAuth } from "convex/react";
-import { authClient } from "@/lib/auth-client";
+import { authClient, useSession } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import SearchInput from "./SearchInput";
 
 export function Navbar() {
-  const { isAuthenticated, isLoading } = useConvexAuth();
+  const { data: session, isPending } = useSession();
+
   const router = useRouter();
   return (
     <nav className="flex w-full py-5 items-center justify-between">
@@ -38,7 +38,11 @@ export function Navbar() {
         <div className="hidden md:block mr-2">
           <SearchInput />
         </div>
-        {isLoading ? null : isAuthenticated ? (
+        {/* Update logic: Check isPending and session */}
+        {isPending ? (
+          // Optional: Render a small skeleton or nothing while checking
+          <div className="w-20 h-9" />
+        ) : session ? ( // If session exists, user is logged in
           <Button
             onClick={() =>
               authClient.signOut({
@@ -69,7 +73,6 @@ export function Navbar() {
             </Link>
           </>
         )}
-
         <ThemeToggle />
       </div>
     </nav>
