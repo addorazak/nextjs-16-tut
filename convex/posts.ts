@@ -25,6 +25,7 @@ export const createPost = mutation({
   },
 });
 
+// forcing update
 export const getAllPosts = query({
   args: {},
   handler: async (ctx) => {
