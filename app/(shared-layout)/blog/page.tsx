@@ -7,7 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Metadata } from "next";
 import { Suspense } from "react";
-import { cacheLife, cacheTag } from "next/cache";
+import { unstable_cache } from "next/cache";
 
 export const metadata: Metadata = {
   title: "Blog | NextPro",
@@ -15,6 +15,17 @@ export const metadata: Metadata = {
   category: "Web Development",
   authors: [{ name: "Abdul-Razak" }],
 };
+
+const getCachedPosts = unstable_cache(
+  async () => {
+    return await fetchQuery(api.posts.getAllPosts);
+  },
+  ["all-posts-list"],
+  {
+    revalidate: 3600, // Revalidate every hour (same as cacheLife)
+    tags: ["blog"], // The tag you wanted (same as cacheTag)
+  },
+);
 
 export default function BlogPage() {
   return (
@@ -36,11 +47,7 @@ export default function BlogPage() {
 }
 
 async function LoadingBlogList() {
-  "use cache";
-  cacheLife("hours");
-  cacheTag("blog");
-
-  const data = await fetchQuery(api.posts.getAllPosts);
+  const data = await getCachedPosts();
 
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -90,7 +97,7 @@ function SkeletonLoading() {
           <div className="flex flex-col space-y-2">
             <Skeleton className="h-6 w-3/4" />
             <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w--full" />
+            <Skeleton className="h-4 w-full" />
           </div>
         </div>
       ))}

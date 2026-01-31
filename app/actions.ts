@@ -58,5 +58,3 @@ export async function createBlogAction(values: z.infer<typeof postSchema>) {
   updateTag("blog");
   return redirect("/blog");
 }
-
-
